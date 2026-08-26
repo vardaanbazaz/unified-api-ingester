@@ -1,0 +1,9 @@
+api:
+  url: "https://api.openbrewerydb.org/v1/breweries"
+  default_per_page: 50
+  max_retries: 3
+  timeout: 10
+
+storage:
+  duckdb_path: "data/ingested_data.duckdb"
+  lake_dir: "data/lake"
