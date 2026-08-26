@@ -71,7 +71,7 @@ api-ingestor/
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/api-ingestor.git
+git clone https://github.com/vardaanbazaz/api-ingestor.git
 cd api-ingestor
 
 # Create and activate virtual environment
