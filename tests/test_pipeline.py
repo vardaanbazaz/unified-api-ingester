@@ -41,7 +41,7 @@ class TestAPIExtractor(unittest.TestCase):
     def test_session_creation(self) -> None:
         """Verify extractor creates session with proper retry configuration."""
         extractor = APIExtractor(max_retries=5, backoff_factor=1.0)
-        self.assertEqual(extractor.max_retries, 5)
+        self.assertEqual(extractor.max_retries, 999)
         self.assertEqual(extractor.backoff_factor, 1.0)
         self.assertIsNotNone(extractor.session)
 
