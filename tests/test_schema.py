@@ -20,7 +20,7 @@ class TestSchema(unittest.TestCase):
         self.assertIn("CREATE TABLE IF NOT EXISTS breweries", ddl)
         for col in schema.DDL_COLUMNS:
             self.assertIn(col.name, ddl)
-        self.assertIn("id VARCHAR", ddl)
+        self.assertIn("id VARCHAR PRIMARY KEY", ddl)
 
     def test_transform_column_types_matches_column_schema_names(self):
         schema_names = {c.name for c in schema.COLUMN_SCHEMA}

@@ -145,6 +145,41 @@ class TestDuckDBLoader(unittest.TestCase):
         # Row count remains 1, record updated
         self.assertEqual(self.loader.get_row_count(), 1)
 
+    def test_load_is_order_independent(self) -> None:
+        """Column order in the DataFrame must not affect which value lands where."""
+        df = pd.DataFrame([{
+            "id": "brewery-1",
+            "name": "Test Brewery",
+            "brewery_type": "micro",
+            "address_1": None, "address_2": None, "address_3": None,
+            "city": "Testville",
+            "state_province": "TS",
+            "postal_code": "00000",
+            "country": "USA",
+            "longitude": -122.4,
+            "latitude": 37.7,
+            "phone": None,
+            "website_url": None,
+            "state": "TS",
+            "street": None,
+            "ingested_at": pd.Timestamp.now(tz="UTC"),
+        }])
+
+        # Shuffle columns so order no longer matches the DDL.
+        shuffled = df[list(reversed(df.columns))]
+
+        self.loader.load(shuffled)
+
+        conn = duckdb.connect(self.db_path)
+        row = conn.execute(
+            "SELECT id, city, state_province FROM test_breweries WHERE id = 'brewery-1'"
+        ).fetchone()
+        conn.close()
+
+        self.assertEqual(row[0], "brewery-1")
+        self.assertEqual(row[1], "Testville")
+        self.assertEqual(row[2], "TS")
+
 
 class TestParquetExporter(unittest.TestCase):
     """Unit tests for ParquetExporter module."""

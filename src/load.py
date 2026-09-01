@@ -11,6 +11,7 @@ from typing import Optional
 import duckdb
 import pandas as pd
 
+from src import schema
 from src.config import StorageConfig, load_config
 
 logger = logging.getLogger(__name__)
@@ -50,27 +51,7 @@ class DuckDBLoader:
         Args:
             conn: Active DuckDB connection instance.
         """
-        ddl = f"""
-        CREATE TABLE IF NOT EXISTS {self.table_name} (
-            id VARCHAR PRIMARY KEY,
-            name VARCHAR,
-            brewery_type VARCHAR,
-            address_1 VARCHAR,
-            address_2 VARCHAR,
-            address_3 VARCHAR,
-            city VARCHAR,
-            state_province VARCHAR,
-            postal_code VARCHAR,
-            country VARCHAR,
-            longitude DOUBLE,
-            latitude DOUBLE,
-            phone VARCHAR,
-            website_url VARCHAR,
-            state VARCHAR,
-            street VARCHAR,
-            ingested_at TIMESTAMPTZ
-        );
-        """
+        ddl = schema.build_ddl(self.table_name)
         conn.execute(ddl)
         logger.info("Verified table structure for '%s'", self.table_name)
 
@@ -96,16 +77,12 @@ class DuckDBLoader:
             conn.register("df_temp_view", df)
 
             # Perform UPSERT (ON CONFLICT DO UPDATE)
-            cols = [
-                "name", "brewery_type", "address_1", "address_2", "address_3",
-                "city", "state_province", "postal_code", "country", "longitude",
-                "latitude", "phone", "website_url", "state", "street", "ingested_at"
-            ]
-            update_clause = ", ".join([f"{col} = EXCLUDED.{col}" for col in cols])
+            insert_cols_sql = ", ".join(schema.INSERT_COLUMNS)
+            update_clause = ", ".join(f"{col} = EXCLUDED.{col}" for col in schema.UPDATE_COLUMNS)
 
             upsert_query = f"""
-            INSERT INTO {self.table_name}
-            SELECT * FROM df_temp_view
+            INSERT INTO {self.table_name} ({insert_cols_sql})
+            SELECT {insert_cols_sql} FROM df_temp_view
             ON CONFLICT (id) DO UPDATE SET
             {update_clause};
             """

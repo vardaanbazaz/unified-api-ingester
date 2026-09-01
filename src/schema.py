@@ -62,9 +62,16 @@ INSERT_COLUMNS: List[str] = [c.name for c in DDL_COLUMNS]
 UPDATE_COLUMNS: List[str] = [c.name for c in DDL_COLUMNS if not c.primary_key]
 
 
+def _column_ddl(c: ColumnDef) -> str:
+    """Render one column's DDL fragment, appending PRIMARY KEY when the
+    ColumnDef's flag says so — never hardcode which column name gets it."""
+    suffix = " PRIMARY KEY" if c.primary_key else ""
+    return f"{c.name} {c.sql_type}{suffix}"
+
+
 def build_ddl(table_name: str) -> str:
     """Render CREATE TABLE IF NOT EXISTS DDL for the given table name."""
-    cols_sql = ",\n            ".join(f"{c.name} {c.sql_type}" for c in DDL_COLUMNS)
+    cols_sql = ",\n            ".join(_column_ddl(c) for c in DDL_COLUMNS)
     return f"""
         CREATE TABLE IF NOT EXISTS {table_name} (
             {cols_sql}
