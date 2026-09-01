@@ -84,6 +84,12 @@ class TestPayloadTransformer(unittest.TestCase):
         self.assertEqual(df.loc[0, "longitude"], -122.4194)  # Parsed float
         self.assertTrue(pd.isna(df.loc[1, "longitude"]))  # None preserved as NaN
 
+    def test_column_type_map_matches_schema(self) -> None:
+        """PayloadTransformer.column_type_map must be sourced from schema.py, not a local copy."""
+        from src import schema
+
+        self.assertEqual(self.transformer.column_type_map, schema.TRANSFORM_COLUMN_TYPES)
+
     def test_transform_empty_records(self) -> None:
         """Test transformation of empty records list."""
         df = self.transformer.transform([])

@@ -9,6 +9,8 @@ import logging
 from typing import Any, Dict, List
 import pandas as pd
 
+from src.schema import TRANSFORM_COLUMN_TYPES
+
 logger = logging.getLogger(__name__)
 
 
@@ -17,24 +19,7 @@ class PayloadTransformer:
 
     def __init__(self) -> None:
         """Initialize the payload transformer with predefined schema expectations."""
-        self.column_type_map = {
-            "id": "string",
-            "name": "string",
-            "brewery_type": "string",
-            "address_1": "string",
-            "address_2": "string",
-            "address_3": "string",
-            "city": "string",
-            "state_province": "string",
-            "postal_code": "string",
-            "country": "string",
-            "longitude": "float64",
-            "latitude": "float64",
-            "phone": "string",
-            "website_url": "string",
-            "state": "string",
-            "street": "string",
-        }
+        self.column_type_map = dict(TRANSFORM_COLUMN_TYPES)
 
     def transform(self, raw_records: List[Dict[str, Any]]) -> pd.DataFrame:
         """Transform raw list of dictionary payloads into a normalized DataFrame.
