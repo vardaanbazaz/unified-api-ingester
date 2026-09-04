@@ -2,8 +2,8 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![DuckDB](https://img.shields.io/badge/DuckDB-1.0%2B-yellow.svg)](https://duckdb.org/)
-[![Apache Parquet](https://img.shields.io/badge/Parquet-Hive%20Partitioned-green.svg)](https://parquet.apache.org/)
-[![Tests](https://img.shields.io/badge/Tests-8%2F8%20Passing-brightgreen.svg)]()
+[![Apache Parquet](<https://img.shields.io/badge/Parquet-Hive%20Partitioned-green.svg>)](https://parquet.apache.org/)
+[![Tests](<https://img.shields.io/badge/Tests-8%2F8%20Passing-brightgreen.svg>)]()
 
 An enterprise-grade, resilient, environment-agnostic **Data Lakehouse Ingestion Engine** built in Python. The pipeline extracts raw JSON payloads from public REST APIs with automated exponential backoff and retry handling, normalizes data into structured Pandas DataFrames, and dual-persists records into an **idempotent DuckDB database** and a **Hive-partitioned Parquet Data Lake**.
 
@@ -119,15 +119,15 @@ storage:
 
 ### CLI Override Flags
 
-| Flag | Type | Description | Default Fallback |
-| :--- | :--- | :--- | :--- |
-| `--config` | `str` | Path to YAML configuration file | `config/config.yaml` |
-| `--api-url` | `str` | Endpoint URL of target REST API | `config.api.url` |
-| `--max-pages` | `int` | Maximum pages to extract | `None` (Fetches all pages) |
-| `--per-page` | `int` | Number of items per page | `config.api.default_per_page` |
-| `--db-path` | `str` | Target DuckDB database file path | `config.storage.duckdb_path` |
-| `--lake-dir` | `str` | Parquet Data Lake root directory | `config.storage.lake_dir` |
-| `--log-level` | `str` | Logging verbosity (`DEBUG`, `INFO`, `WARNING`, `ERROR`) | `INFO` |
+| Flag            | Type    | Description                                                     | Default Fallback                |
+| :-------------- | :------ | :-------------------------------------------------------------- | :------------------------------ |
+| `--config`    | `str` | Path to YAML configuration file                                 | `config/config.yaml`          |
+| `--api-url`   | `str` | Endpoint URL of target REST API                                 | `config.api.url`              |
+| `--max-pages` | `int` | Maximum pages to extract                                        | `None` (Fetches all pages)    |
+| `--per-page`  | `int` | Number of items per page                                        | `config.api.default_per_page` |
+| `--db-path`   | `str` | Target DuckDB database file path                                | `config.storage.duckdb_path`  |
+| `--lake-dir`  | `str` | Parquet Data Lake root directory                                | `config.storage.lake_dir`     |
+| `--log-level` | `str` | Logging verbosity (`DEBUG`, `INFO`, `WARNING`, `ERROR`) | `INFO`                        |
 
 ---
 
@@ -164,16 +164,3 @@ df = conn.execute("SELECT * FROM 'data/lake/year=*/*/*/*.parquet' LIMIT 10").df(
 print(df)
 conn.close()
 ```
-
----
-
-## Development Process
-
-This project was built using **Claude Code** as a debugging, refactoring, and implementation assistant, directed and reviewed throughout by me. All architectural decisions, planning documents, and verification were done manually — including:
-
-- Writing implementation plans (`docs/schema_refactor_plan.md`, `docs/framework_vision.md`) before any code was changed
-- Reviewing every `git diff` before committing
-- Verifying CI behavior directly in GitHub's Actions tab (e.g., deliberately breaking a test to confirm the CI gate actually blocks a failing build)
-- Catching and correcting issues Claude Code introduced or missed, including an unpushed branch that looked complete, and a silent data-corruption risk in a positional SQL `INSERT` that only surfaced under manual review
-
-The commit history reflects an iterative, plan-first, diff-reviewed workflow — not unreviewed AI-generated output.
