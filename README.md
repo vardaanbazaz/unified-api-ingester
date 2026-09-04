@@ -164,3 +164,16 @@ df = conn.execute("SELECT * FROM 'data/lake/year=*/*/*/*.parquet' LIMIT 10").df(
 print(df)
 conn.close()
 ```
+
+---
+
+## Development Process
+
+This project was built using **Claude Code** as a debugging, refactoring, and implementation assistant, directed and reviewed throughout by me. All architectural decisions, planning documents, and verification were done manually — including:
+
+- Writing implementation plans (`docs/schema_refactor_plan.md`, `docs/framework_vision.md`) before any code was changed
+- Reviewing every `git diff` before committing
+- Verifying CI behavior directly in GitHub's Actions tab (e.g., deliberately breaking a test to confirm the CI gate actually blocks a failing build)
+- Catching and correcting issues Claude Code introduced or missed, including an unpushed branch that looked complete, and a silent data-corruption risk in a positional SQL `INSERT` that only surfaced under manual review
+
+The commit history reflects an iterative, plan-first, diff-reviewed workflow — not unreviewed AI-generated output.
