@@ -15,9 +15,12 @@ Three sources, deliberately chosen to be maximally different from each other:
 1. **OpenBreweryDB** (already built) — no auth, offset/limit pagination, flat
    JSON records.
 2. **Hugging Face Inference API — sentiment analysis**
-   (`distilbert-base-uncased-finetuned-sst-2-english`) — API-key auth,
-   single-request (no pagination), nested JSON
-   (`[{"label": ..., "score": ...}]`).
+   (`distilbert/distilbert-base-uncased-finetuned-sst-2-english`, called via
+   `router.huggingface.co/hf-inference/models/<owner>/<name>`) — API-key auth,
+   single-request (no pagination), nested JSON: a list containing one list of
+   `{label, score}` objects, one per class
+   (`[[{"label": "POSITIVE", "score": 0.9998767375946045}, {"label":
+   "NEGATIVE", "score": 0.0001232026843354106}]]`).
 3. **Twitch API** — OAuth2 (Client ID + Client Secret via `.env`, already
    confirmed working, no card required), cursor-based pagination, nested
    JSON.
