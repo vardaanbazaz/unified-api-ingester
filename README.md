@@ -39,7 +39,7 @@ flowchart TD
 ## 📁 Repository Structure
 
 ```text
-api-ingestor/
+unified-api-ingester/
 ├── config/
 │   └── config.yaml          # Centralized pipeline configuration defaults
 ├── data/
@@ -71,8 +71,8 @@ api-ingestor/
 
 ```bash
 # Clone the repository
-git clone https://github.com/vardaanbazaz/api-ingestor.git
-cd api-ingestor
+git clone https://github.com/vardaanbazaz/unified-api-ingester.git
+cd unified-api-ingester
 
 # Create and activate virtual environment
 python3 -m venv .venv
